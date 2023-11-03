@@ -1,10 +1,8 @@
-import matplotlib.pyplot as plt
 from deepface import DeepFace
 import cv2
 import os
 import numpy as np
 import pandas as pd
-from PIL import ImageFont, ImageDraw, Image
 
 model_names = [
     "VGG-Face",
@@ -27,6 +25,7 @@ email = "ameliseenko@edu.hse.ru"
 frames_list = os.listdir(frames_directory)
 false_count = 0
 true_count = 0
+
 # функция для визуализации результатов проверки лица
 def visualise_deepface_verify_obj(image, verification_results = {}):
     color = (128, 0, 128)
@@ -39,10 +38,12 @@ def visualise_deepface_verify_obj(image, verification_results = {}):
     img = cv2.putText(img, f"similarity_metric: {verification_results['similarity_metric']}", (50,180), cv2.FONT_HERSHEY_SIMPLEX, 1.2, color, 2, cv2.LINE_AA)
     img = cv2.putText(img, f"face_pixel_height: {face_pixel_height}", (50,210), cv2.FONT_HERSHEY_SIMPLEX, 1.2, color, 2, cv2.LINE_AA)
     return img
+
 # проверка существования директория, если ее нет, создаем
 isExist = os.path.exists(frames_directory+"/verify_results")
 if not isExist:
         os.makedirs(frames_directory + "/verify_results", exist_ok=True)
+
 # извлекаем лица из эталонных изображений
 face_objs_db = DeepFace.extract_faces(
     img_path=db_image, detector_backend="retinaface",
@@ -50,7 +51,12 @@ face_objs_db = DeepFace.extract_faces(
 )
 face_db = face_objs_db[0]["face"]
 
+# создаем df для хранения результатов
 results_df = pd.DataFrame(columns=["email", "file_name", "verified", "distance", "model", "detector", "metric", "height", "reference_image"])
+
+def save_results_to_csv(results_df, output_csv_file):
+    results_df.to_csv(output_csv_file, index=False)
+
 # сравниваем лица в кадре с эталонными и сохранаям результат проверки
 for frame in frames_list:
     frame_path = frames_directory + r'\\' + frame
@@ -95,5 +101,8 @@ for frame in frames_list:
         # если в кадре не найдены лица
         print(f"No face found for {frame}, error message: {str(e)}")
         continue
-results_df.to_csv(os.path.join(frames_directory, "verification_results.csv"), index=False)
+
+results_csv_filename = os.path.join(frames_directory, "verification_results.csv")
+save_results_to_csv(results_df, results_csv_filename)
+
 print(f"True positive:{true_count}, false negative:{false_count}")
