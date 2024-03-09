@@ -1,3 +1,4 @@
+*.csv
 *.mp4
 *.mkv
 *.log
@@ -8,3 +9,4 @@
 *.png
 *.JPG
 **/faces_venv
+**/.ipynb_checkpoints
