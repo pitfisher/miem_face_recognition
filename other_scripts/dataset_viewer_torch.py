@@ -3,19 +3,19 @@ from torchvision.utils import make_grid, save_image
 from torchvision.transforms import transforms, functional
 from torchvision import torch
 import matplotlib.pyplot as plt
-from PIL import Image, ImageTk
+from PIL import Image
 import os
-import tkinter
+# import tkinter
 import numpy as np
 import cv2
 from tqdm import tqdm
 
-dataset_dir = r'C:\Users\HYPERPC\Documents\miem-project-1712\upd_face_dataset'
+dataset_dir = r'/tf/data/dataset_clean'
 # user_name = "prybakov"
 # user_name = "aabarstok"
 horizontal_positions = ["45_left","center","45_right"]
 vertical_positions = ["up","center","down"]
-users_list = os.listdir(r'C:\Users\HYPERPC\Documents\miem-project-1712\upd_face_dataset\center\center')
+users_list = os.listdir(os.path.join(dataset_dir, 'center/center'))
 save_dir = os.path.join(dataset_dir, "grids")
 
 
